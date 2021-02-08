@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import telebot
 import requests
 import traceback
 import threading
