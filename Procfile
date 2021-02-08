@@ -1,1 +1,1 @@
-worker: python ps5Discord.py
+worker: python main.py
