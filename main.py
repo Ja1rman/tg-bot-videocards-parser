@@ -51,7 +51,7 @@ def goods(url):
             r = r[r.find('"skuCode":"' + url[url.rfind('-')+1:]):]
             status = r[r.find('availableShops')+16:]
             status = status[:status.find(',')]
-            if status != '0': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403718626082867/IYXICFI6L4oEbO2yNG-1Q4r9GxmJ21oODfF2qDFvaX9r8q-rHRpUmFUY-EA9xVAz3EaN', 
+            if status != '0' and response.status_code == 200: discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403718626082867/IYXICFI6L4oEbO2yNG-1Q4r9GxmJ21oODfF2qDFvaX9r8q-rHRpUmFUY-EA9xVAz3EaN', 
                                             content=url).execute()
         except: print(traceback.format_exc())
 
@@ -64,7 +64,7 @@ def gamepark(url):
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
             response = requests.get(url, headers=headers)
             r = response.text
-            if 'Нет в наличии' not in r: discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808404192682180648/TKbq2iPcPN4DQkW05RKRl4cNcPeKDHVVpdAIwV6g7UD-ujj4NNJDHoJehK0tmZeYptJF', 
+            if 'Нет в наличии' not in r and response.status_code == 200: discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808404192682180648/TKbq2iPcPN4DQkW05RKRl4cNcPeKDHVVpdAIwV6g7UD-ujj4NNJDHoJehK0tmZeYptJF', 
                                                         content=url).execute()
         except: print(traceback.format_exc())
 
