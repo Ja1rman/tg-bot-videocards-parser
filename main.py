@@ -35,7 +35,7 @@ def wildberries(url):
             r = response.json()
             status = r['value']['data']['addToBasketEnable']
             if status == 'True': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403407890415656/MvfMwly7JPdDjs3zRr_GF3mzGwxWPZEn6A5B9RaTla-8qBuzaaF25-UTzgx5bCQ3I5Fu', 
-                                                content=url).execute()
+                                                content='https://www.wildberries.ru/catalog/' + r['value']['data']['rqCod1S'] + '/detail.aspx').execute()
         except: print(traceback.format_exc())
 
 goodsUrls = ["https://goods.ru/catalog/details/igrovaya-pristavka-sony-playstation-5-825gb-100026864564",
