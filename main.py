@@ -2,7 +2,7 @@
 
 import requests
 import traceback
-import threading
+import multiprocessing
 import discord_webhook
 
 ozonUrls = ["https://www.ozon.ru/context/detail/id/207702519/",
@@ -24,18 +24,17 @@ def ozon(url):
                                                 content=url).execute()
         except: print(traceback.format_exc())
 
-wildberriesUrls = ["https://www.wildberries.ru/catalog/15298664/detail.aspx",
-                   "https://www.wildberries.ru/catalog/15298663/detail.aspx"]
+wildberriesUrls = ["https://www.wildberries.ru/15298664/product/data",
+                   "https://www.wildberries.ru/15298663/product/data"]
 
 def wildberries(url):
     while True:
         try:
             headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
             response = requests.get(url, headers=headers)
-            r = response.text
-            status = r[r.find('isSoldOut"')+11:]
-            status = status[:status.find(',"cod1S')]
-            if status == 'false': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403407890415656/MvfMwly7JPdDjs3zRr_GF3mzGwxWPZEn6A5B9RaTla-8qBuzaaF25-UTzgx5bCQ3I5Fu', 
+            r = response.json()
+            status = r['value']['data']['addToBasketEnable']
+            if status == 'True': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403407890415656/MvfMwly7JPdDjs3zRr_GF3mzGwxWPZEn6A5B9RaTla-8qBuzaaF25-UTzgx5bCQ3I5Fu', 
                                                 content=url).execute()
         except: print(traceback.format_exc())
 
@@ -71,17 +70,17 @@ def gamepark(url):
 if __name__ == "__main__":
     threads = []
     for i in range(len(ozonUrls)):
-        threads.append(threading.Thread(target=(ozon), args=(ozonUrls[i],)))
+        threads.append(mp.Process(target=ozon, args=(ozonUrls[i],)))
         threads[-1].start()
     
     for i in range(len(wildberriesUrls)):
-        threads.append(threading.Thread(target=(wildberries), args=(wildberriesUrls[i],)))
+        threads.append(mp.Process(target=wildberries, args=(wildberriesUrls[i],)))
         threads[-1].start()
 
     for i in range(len(goodsUrls)):
-        threads.append(threading.Thread(target=(goods), args=(goodsUrls[i],)))
+        threads.append(mp.Process(target=goods, args=(goodsUrls[i],)))
         threads[-1].start()
 
     for i in range(len(gameparkUrls)):
-        threads.append(threading.Thread(target=(gamepark), args=(gameparkUrls[i],)))
+        threads.append(mp.Process(target=gamepark, args=(gameparkUrls[i],)))
         threads[-1].start()
