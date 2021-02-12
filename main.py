@@ -2,7 +2,7 @@
 
 import requests
 import traceback
-import multiprocessing
+import multiprocessing as mp
 import discord_webhook
 
 ozonUrls = ["https://www.ozon.ru/context/detail/id/207702519/",
