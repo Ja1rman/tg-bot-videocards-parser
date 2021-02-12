@@ -34,7 +34,7 @@ def wildberries(url):
             response = requests.get(url, headers=headers)
             r = response.text
             status = r[r.find('isSoldOut"')+11:]
-            status = status[:status.find(',')]
+            status = status[:status.find(',"cod1S')]
             if status == 'false': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403407890415656/MvfMwly7JPdDjs3zRr_GF3mzGwxWPZEn6A5B9RaTla-8qBuzaaF25-UTzgx5bCQ3I5Fu', 
                                                 content=url).execute()
         except: print(traceback.format_exc())
