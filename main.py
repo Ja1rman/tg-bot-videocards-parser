@@ -126,7 +126,7 @@ def oldi():
                         discord_webhook.DiscordWebhook(url=wb2,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
             except: print(traceback.format_exc())
-        return
+        
 def vk():
     lastText = ''
     while True:
