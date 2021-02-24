@@ -1,3 +1,4 @@
 discord_webhook
 bs4
 pytelegrambotapi
+urllib3==1.25.11
