@@ -82,7 +82,6 @@ def vk():
     while True:
         try:
             response = requests.get('https://vk.com/nvidia', headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
-            print(response.status_code)
             soup = BeautifulSoup(response.text, 'html.parser')
             soup = soup.find('div', {'class': '_post post page_block all own post--with-likes closed_comments deep_active'})
             text = soup.find('div', {'class': 'wall_post_text'}).get_text()
@@ -96,15 +95,15 @@ def vk():
 if __name__ == "__main__":
     threads = []
     
-    #threads.append(mp.Process(target=ogo))
-    #threads[-1].start()
+    threads.append(mp.Process(target=ogo))
+    threads[-1].start()
 
-    #threads.append(mp.Process(target=onlineTrade))
-    #threads[-1].start()
+    threads.append(mp.Process(target=onlineTrade))
+    threads[-1].start()
 
-    #for url in aliUrls:
-    #    threads.append(mp.Process(target=aliexpress, args=(url,)))
-    #    threads[-1].start()
+    for url in aliUrls:
+        threads.append(mp.Process(target=aliexpress, args=(url,)))
+        threads[-1].start()
 
     threads.append(mp.Process(target=vk))
     threads[-1].start()
