@@ -12,6 +12,10 @@ import discord_webhook
 bot = telebot.TeleBot('1680508706:AAGu_zrjj1X9BzYMNUhb3CW1E7ABey4Ft8Q')
 CHANNEL = '@nvidiart'
 
+proxies = ["https://MiSyCcnd:qVgHXfYS@45.138.147.177:53094",
+           "https://MiSyCcnd:qVgHXfYS@92.249.12.59:52850",
+           "https://MiSyCcnd:qVgHXfYS@45.139.52.158:46229",
+           "https://MiSyCcnd:qVgHXfYS@176.103.91.220:64742"]
 
 def ogo():
     while True:
@@ -101,15 +105,13 @@ def oldi():
     while True:
         for id in range(60, 91, 10):
             try:
-                url = 'https://sort.diginetica.net/search?st=rtx%2030' + \
-                    str(id) + '&apiKey=4OC8353048&strategy=vectors_extended,zero_queries_predictor&fullData=true&withCorrection=true&withFacets=true&treeFacets=true&regionId=259749&useCategoryPrediction=true&size=24&offset=0&showUnavailable=false&unavailableMultiplier=0.2&preview=false&withSku=false&sort=PRICE_DESC'
+                url = 'https://sort.diginetica.net/search?st=rtx%2030' + str(id) + '&apiKey=4OC8353048&strategy=vectors_extended,zero_queries_predictor&fullData=true&withCorrection=true&withFacets=true&treeFacets=true&regionId=&useCategoryPrediction=true&size=24&offset=0&showUnavailable=false&unavailableMultiplier=0.2&preview=false&withSku=false&sort=PRICE_DESC'
                 response = requests.get(url, headers={
-                                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+                                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}, proxies={'https': proxies[0]})
                 for product in response.json()['products']:
                     price = float(product['price'])
                     if price > 25000 and (price < 65000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90):
-                        bot.send_message(
-                            CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
+                        bot.send_message(CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
                         discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/814040297503588392/W2afc48KHL2Ds92p_TvMK5xITPEPBMWPSXg292sKDF5JpA5xz7NlK1J0TcjSP3p7k9t4',
                                                        content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
             except: print(traceback.format_exc())
