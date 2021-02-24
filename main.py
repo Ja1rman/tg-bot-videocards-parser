@@ -1,86 +1,110 @@
 # -*- coding: utf-8 -*-
 
+import telebot
 import requests
 import traceback
 import multiprocessing as mp
+import time
+import random
+from bs4 import BeautifulSoup
 import discord_webhook
 
-ozonUrls = ["https://www.ozon.ru/context/detail/id/207702519/",
-        "https://www.ozon.ru/context/detail/id/207702520/", 
-        "https://www.ozon.ru/context/detail/id/216940493/",
-        "https://www.ozon.ru/context/detail/id/178337786/",
-        "https://www.ozon.ru/context/detail/id/173667655/",
-        "https://www.ozon.ru/context/detail/id/178715781"]
+bot = telebot.TeleBot('1680508706:AAGu_zrjj1X9BzYMNUhb3CW1E7ABey4Ft8Q')
+CHANNEL = '@nvidiart'
 
-def ozon(url):
+def ogo():
+    while True:
+        for id in range(60, 91, 10):
+            try:
+                url = 'https://ogo1.ru/search/?only_available=Y&q=rtx%2030' + str(id)
+                response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+                soup = BeautifulSoup(response.text, 'html.parser')
+                soup = soup.find_all("div", {"class": "js-b-catalog-plates__item category-page__row-col js-item"})
+                for product in soup:
+                    try:
+                        pricet = product.find("div", {"class": "b-plate-product__price"}).get_text()
+                        price = ''
+                        for ch in pricet:
+                            if ch.isdigit(): price += ch
+                        price = int(price)
+                        if id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000:
+                            href = product.find("a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"})['href']
+                            bot.send_message(CHANNEL, 'https://ogo1.ru' + href, disable_web_page_preview=True)
+                            discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/814040297503588392/W2afc48KHL2Ds92p_TvMK5xITPEPBMWPSXg292sKDF5JpA5xz7NlK1J0TcjSP3p7k9t4', 
+                                                content='https://ogo1.ru' + href).execute()
+                    except: print(traceback.format_exc())
+            except: print(traceback.format_exc())
+
+def onlineTrade():
+    while True:
+        for id in range(60, 91, 10):
+            try:
+                response = requests.get('https://www.onlinetrade.ru/sitesearch.html?query=rtx+30' + str(id) + '&sort=price-asc&page=0&page=0', headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+                soup = BeautifulSoup(response.text, 'html.parser')
+                soup = soup.find_all('div', {'class': 'indexGoods__item'})
+                for product in soup[0:10]:
+                    try:
+                        try: free = product.find("a", {"class": "button button__orange js__ajaxExchange"}).get_text()
+                        except: continue
+                        pricet = product.find("span", {"class": "price regular"}).get_text()
+                        price = ''
+                        for ch in pricet:
+                            if ch.isdigit(): price += ch
+                        price = int(price)
+                        if price > 30000 and (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
+                            href = product.find("a", {"class": "indexGoods__item__image"})['href']
+                            bot.send_message(CHANNEL, 'https://www.onlinetrade.ru' + href, disable_web_page_preview=True)
+                            discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/814040297503588392/W2afc48KHL2Ds92p_TvMK5xITPEPBMWPSXg292sKDF5JpA5xz7NlK1J0TcjSP3p7k9t4', 
+                                                content='https://www.onlinetrade.ru' + href).execute()
+                    except: print(traceback.format_exc())
+            except: print(traceback.format_exc())
+
+aliUrls = ['https://aliexpress.ru/item/1005001837109821.html',
+            'https://aliexpress.ru/item/1005001671921502.html',
+            'https://aliexpress.ru/item/1005001671979254.html',
+            'https://aliexpress.ru/item/1005001671841809.html']
+
+def aliexpress(url):
     while True:
         try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
-            response = requests.get(url, headers=headers)
-            r = response.text
-            status = r[r.find('isAvailable')+13:]
-            status = status[:status.find(',')]
-            if status == 'true': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808402021770199120/6PWBz6hao8__SEL7pFhtJDjbAZ5hhJ6rLBJuvhGdMnlD3p8fKgSDfrkt92tkT6G6SyPQ', 
+            response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+            quant = response.text
+            quant = quant[quant.find('totalAvailQuantity')+20:]
+            quant = quant[:quant.find('}')]
+            if quant != '0' and response.status_code == 200:
+                bot.send_message(CHANNEL, url, disable_web_page_preview=True)
+                discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/814040297503588392/W2afc48KHL2Ds92p_TvMK5xITPEPBMWPSXg292sKDF5JpA5xz7NlK1J0TcjSP3p7k9t4', 
                                                 content=url).execute()
         except: print(traceback.format_exc())
 
-wildberriesUrls = ["https://www.wildberries.ru/15298664/product/data",
-                   "https://www.wildberries.ru/15298663/product/data"]
-
-def wildberries(url):
+def vk():
+    lastText = ''
     while True:
         try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
-            response = requests.get(url, headers=headers)
-            r = response.json()
-            status = r['value']['data']['addToBasketEnable']
-            if status == 'True': discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403407890415656/MvfMwly7JPdDjs3zRr_GF3mzGwxWPZEn6A5B9RaTla-8qBuzaaF25-UTzgx5bCQ3I5Fu', 
-                                                content='https://www.wildberries.ru/catalog/' + r['value']['data']['rqCod1S'] + '/detail.aspx').execute()
-        except: print(traceback.format_exc())
-
-goodsUrls = ["https://goods.ru/catalog/details/igrovaya-pristavka-sony-playstation-5-825gb-100026864564",
-             "https://goods.ru/catalog/details/igrovaya-pristavka-sony-playstation-5-digital-edition-100027598944"]
-
-def goods(url):
-    while True:
-        try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
-            response = requests.get(url, headers=headers)
-            r = response.text
-            r = r[r.find('"skuCode":"' + url[url.rfind('-')+1:]):]
-            status = r[r.find('availableShops')+16:]
-            status = status[:status.find(',')]
-            if status != '0' and response.status_code == 200: discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808403718626082867/IYXICFI6L4oEbO2yNG-1Q4r9GxmJ21oODfF2qDFvaX9r8q-rHRpUmFUY-EA9xVAz3EaN', 
-                                            content=url).execute()
-        except: print(traceback.format_exc())
-
-gameparkUrls = ["https://www.gamepark.ru/playstation5/console/IgrovayakonsolSonyPlayStation5/",
-                "https://www.gamepark.ru/playstation5/console/IgrovayakonsolSonyPlayStation5DigitalEdition/"]
-
-def gamepark(url):
-    while True:
-        try:
-            headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"} 
-            response = requests.get(url, headers=headers)
-            r = response.text
-            if 'Нет в наличии' not in r and response.status_code == 200: discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/808404192682180648/TKbq2iPcPN4DQkW05RKRl4cNcPeKDHVVpdAIwV6g7UD-ujj4NNJDHoJehK0tmZeYptJF', 
-                                                        content=url).execute()
+            response = requests.get('https://vk.com/nvidia', headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+            print(response.status_code)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            soup = soup.find('div', {'class': '_post post page_block all own post--with-likes closed_comments deep_active'})
+            text = soup.find('div', {'class': 'wall_post_text'}).get_text()
+            if ('vk.cc' in text.lower() or 'aliexpress' in text.lower()) and text != lastText: 
+                bot.send_message(CHANNEL, text, disable_web_page_preview=True)
+                discord_webhook.DiscordWebhook(url='https://discord.com/api/webhooks/814040297503588392/W2afc48KHL2Ds92p_TvMK5xITPEPBMWPSXg292sKDF5JpA5xz7NlK1J0TcjSP3p7k9t4', 
+                                                content=text).execute()
+                lastText = text
         except: print(traceback.format_exc())
 
 if __name__ == "__main__":
     threads = []
-    for i in range(len(ozonUrls)):
-        threads.append(mp.Process(target=ozon, args=(ozonUrls[i],)))
-        threads[-1].start()
     
-    for i in range(len(wildberriesUrls)):
-        threads.append(mp.Process(target=wildberries, args=(wildberriesUrls[i],)))
-        threads[-1].start()
+    #threads.append(mp.Process(target=ogo))
+    #threads[-1].start()
 
-    for i in range(len(goodsUrls)):
-        threads.append(mp.Process(target=goods, args=(goodsUrls[i],)))
-        threads[-1].start()
+    #threads.append(mp.Process(target=onlineTrade))
+    #threads[-1].start()
 
-    for i in range(len(gameparkUrls)):
-        threads.append(mp.Process(target=gamepark, args=(gameparkUrls[i],)))
-        threads[-1].start()
+    #for url in aliUrls:
+    #    threads.append(mp.Process(target=aliexpress, args=(url,)))
+    #    threads[-1].start()
+
+    threads.append(mp.Process(target=vk))
+    threads[-1].start()
