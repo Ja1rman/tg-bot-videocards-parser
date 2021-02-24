@@ -40,7 +40,7 @@ def ogo():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000:
+                        if (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
                             href = product.find(
                                 "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"})['href']
                             bot.send_message(
@@ -116,17 +116,17 @@ def oldi():
             try:
                 url = 'https://sort.diginetica.net/search?st=rtx%2030' + str(id) + '&apiKey=4OC8353048&strategy=vectors_extended,zero_queries_predictor&fullData=true&withCorrection=true&withFacets=true&treeFacets=true&regionId=&useCategoryPrediction=true&size=24&offset=0&showUnavailable=false&unavailableMultiplier=0.2&preview=false&withSku=false&sort=PRICE_DESC'
                 response = requests.get(url, headers={
-                                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"}, proxies={'https': proxies[0]})
+                                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
                 for product in response.json()['products']:
                     price = float(product['price'])
-                    if price > 25000 and (price < 65000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты':
+                    if price > 25000 and (price < 65000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты' and '30' + str(id) in product['name']:
                         bot.send_message(CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
                         discord_webhook.DiscordWebhook(url=wb1,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
                         discord_webhook.DiscordWebhook(url=wb2,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
             except: print(traceback.format_exc())
-
+        return
 def vk():
     lastText = ''
     while True:
@@ -146,6 +146,39 @@ def vk():
                 lastText = text
         except: print(traceback.format_exc())
 
+def regard():
+    while True:
+        for id in range(60, 91, 10):
+            try:
+                url = 'https://www.regard.ru/catalog/?query=rtx%2030' + str(id)
+                response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+                soup = BeautifulSoup(response.text, 'html.parser')
+                soup = soup.find_all('div', {'class': 'block'})
+                for product in soup:
+                    try:
+                        pricet = product.find('div', {'class': 'price'}).get_text()
+                        price = ''
+                        for ch in pricet:
+                            if ch.isdigit():
+                                price += ch
+                        price = int(price)
+                        if (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
+                            href = product.find("div", {"class": "code"}).get_text()
+                            href = href.replace('ID: ', '')
+                            href = 'https://www.regard.ru/catalog/tovar' + href + '.htm'
+                            bot.send_message(CHANNEL, href, disable_web_page_preview=True)
+                            discord_webhook.DiscordWebhook(url=wb1,
+                                                            content=href).execute()
+                            discord_webhook.DiscordWebhook(url=wb2,
+                                                            content=href).execute()
+                    except: print(traceback.format_exc())
+            except: print(traceback.format_exc())
+
+def nix():
+    url = 'https://www.nix.ru/price/search_panel_ajax.html#t:goods;k:rtx+3060;sort:1'
+    response = requests.post(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+    print(response.text)
+
 if __name__ == "__main__":
     threads = []
 
@@ -164,3 +197,8 @@ if __name__ == "__main__":
 
     threads.append(mp.Process(target=oldi))
     threads[-1].start()
+
+    threads.append(mp.Process(target=regard))
+    threads[-1].start()
+
+ 
