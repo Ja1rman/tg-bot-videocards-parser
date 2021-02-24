@@ -102,7 +102,7 @@ def oldi():
         for id in range(60, 91, 10):
             try:
                 url = 'https://sort.diginetica.net/search?st=rtx%2030' + \
-                    str(id) + '&apiKey=4OC8353048&strategy=vectors_extended,zero_queries_predictor&fullData=true&withCorrection=true&withFacets=true&treeFacets=true&regionId=&useCategoryPrediction=true&size=24&offset=0&showUnavailable=false&unavailableMultiplier=0.2&preview=false&withSku=false&sort=PRICE_DESC'
+                    str(id) + '&apiKey=4OC8353048&strategy=vectors_extended,zero_queries_predictor&fullData=true&withCorrection=true&withFacets=true&treeFacets=true&regionId=259749&useCategoryPrediction=true&size=24&offset=0&showUnavailable=false&unavailableMultiplier=0.2&preview=false&withSku=false&sort=PRICE_DESC'
                 response = requests.get(url, headers={
                                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
                 for product in response.json()['products']:
