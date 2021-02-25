@@ -40,7 +40,7 @@ def ogo():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
+                        if (id == 60 and price < 57000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
                             href = product.find(
                                 "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"})['href']
                             bot.send_message(
@@ -75,7 +75,7 @@ def onlineTrade():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if price > 30000 and (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
+                        if price > 30000 and (id == 60 and price < 57000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
                             href = product.find(
                                 "a", {"class": "indexGoods__item__image"})['href']
                             bot.send_message(
@@ -119,7 +119,7 @@ def oldi():
                                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
                 for product in response.json()['products']:
                     price = float(product['price'])
-                    if price > 25000 and (price < 65000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты' and '30' + str(id) in product['name']:
+                    if price > 25000 and (price < 57000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты' and '30' + str(id) in product['name']:
                         bot.send_message(CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
                         discord_webhook.DiscordWebhook(url=wb1,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
