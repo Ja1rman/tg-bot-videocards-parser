@@ -164,7 +164,7 @@ def regard():
                         price = int(price)
                         href = product.find("div", {"class": "code"}).get_text()
                         href = href.replace('ID: ', '')
-                        if (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000 and href != '381509':
+                        if (id == 60 and price < 60000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000 and href != '381509':
                             href = 'https://www.regard.ru/catalog/tovar' + href + '.htm'
                             bot.send_message(CHANNEL, href, disable_web_page_preview=True)
                             discord_webhook.DiscordWebhook(url=wb1,
