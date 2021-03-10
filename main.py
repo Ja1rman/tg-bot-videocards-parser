@@ -8,6 +8,7 @@ import time
 import random
 from bs4 import BeautifulSoup
 import discord_webhook
+import re
 
 bot = telebot.TeleBot('1680508706:AAGu_zrjj1X9BzYMNUhb3CW1E7ABey4Ft8Q')
 CHANNEL = '@nvidiart'
@@ -40,7 +41,9 @@ def ogo():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if (id == 60 and price < 57000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
+                        name = product.find(
+                            "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"}).get_text()
+                        if (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000 and '30' + str(id) in name:
                             href = product.find(
                                 "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"})['href']
                             bot.send_message(
@@ -75,7 +78,7 @@ def onlineTrade():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if price > 30000 and (id == 60 and price < 57000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
+                        if price > 30000 and (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
                             href = product.find(
                                 "a", {"class": "indexGoods__item__image"})['href']
                             bot.send_message(
@@ -119,7 +122,7 @@ def oldi():
                                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
                 for product in response.json()['products']:
                     price = float(product['price'])
-                    if price > 25000 and (price < 57000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты' and '30' + str(id) in product['name']:
+                    if price > 25000 and (price < 65000 and id == 60 or price < 75000 and id == 70 or price < 100000 and id == 80 or price < 150000 and id == 90) and product['categories'][0]['name'] == 'Видеокарты' and '30' + str(id) in product['name']:
                         bot.send_message(CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
                         discord_webhook.DiscordWebhook(url=wb1,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
@@ -162,9 +165,9 @@ def regard():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        href = product.find("div", {"class": "code"}).get_text()
-                        href = href.replace('ID: ', '')
                         if (id == 60 and price < 57000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and price > 25000:
+                            href = product.find("div", {"class": "code"}).get_text()
+                            href = href.replace('ID: ', '')
                             href = 'https://www.regard.ru/catalog/tovar' + href + '.htm'
                             bot.send_message(CHANNEL, href, disable_web_page_preview=True)
                             discord_webhook.DiscordWebhook(url=wb1,
@@ -174,17 +177,19 @@ def regard():
                     except: print(traceback.format_exc())
             except: print(traceback.format_exc())
 
-def nix():
-    url = 'https://www.nix.ru/price/search_panel_ajax.html#t:goods;k:rtx+3060;sort:1'
-    response = requests.post(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
-    print(response.text)
+def citilink():
+    url = 'https://www.citilink.ru/search/?menu_id=29&text=rtx+2060'
+    response = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0"})
+    soup = BeautifulSoup(response.text, 'html.parser')
+    soup = soup.find('a', {'class': 'ProductCardVertical__image-link  Link js--Link Link_type_default'})
+    print(soup['href'])
 
 if __name__ == "__main__":
     threads = []
 
     threads.append(mp.Process(target=ogo))
     threads[-1].start()
-
+    
     threads.append(mp.Process(target=onlineTrade))
     threads[-1].start()
 
@@ -201,4 +206,5 @@ if __name__ == "__main__":
     threads.append(mp.Process(target=regard))
     threads[-1].start()
 
- 
+    #threads.append(mp.Process(target=citilink))
+    #threads[-1].start()
