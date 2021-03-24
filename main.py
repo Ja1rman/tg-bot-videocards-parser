@@ -78,9 +78,9 @@ def onlineTrade():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if price > 30000 and (id == 60 and price < 65000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000):
-                            href = product.find(
-                                "a", {"class": "indexGoods__item__image"})['href']
+                        name = product.find("a", {"class": "indexGoods__item__image"})
+                        if price > 30000 and (id == 60 and price < 55000 or id == 70 and price < 75000 or id == 80 and price < 100000 or id == 90 and price < 150000) and '30' + str(id) in name.get_text():
+                            href = name['href']
                             bot.send_message(
                                 CHANNEL, 'https://www.onlinetrade.ru' + href, disable_web_page_preview=True)
                             discord_webhook.DiscordWebhook(url=wb1,
