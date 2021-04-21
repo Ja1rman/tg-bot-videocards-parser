@@ -205,9 +205,9 @@ if __name__ == "__main__":
     threads.append(mp.Process(target=onlineTrade))
     threads[-1].start()
 
-    for url in aliUrls:
-        threads.append(mp.Process(target=aliexpress, args=(url,)))
-        threads[-1].start()
+    #for url in aliUrls:
+    #    threads.append(mp.Process(target=aliexpress, args=(url,)))
+    #    threads[-1].start()
 
     threads.append(mp.Process(target=oldi))
     threads[-1].start()
