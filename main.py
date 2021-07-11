@@ -159,7 +159,7 @@ def regard():
                             if ch.isdigit():
                                 price += ch
                         price = int(price)
-                        if price >= 30000 and (model == '3060' and price <= 70000 or model == '3070' and price <= 100000 or model == '3080' and price <= 160000 or model == '3090' and price <= 190000):
+                        if price >= 30000 and (model == '3060' and price <= 60000 or model == '3070' and price <= 85000 or model == '3080' and price <= 130000 or model == '3090' and price <= 170000):
                             href = product.find("div", {"class": "code"}).get_text()
                             href = href.replace('ID: ', '')
                             href = 'https://www.regard.ru/catalog/tovar' + href + '.htm'
