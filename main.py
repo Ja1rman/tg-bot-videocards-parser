@@ -42,7 +42,7 @@ def ogo():
                         price = int(price)
                         name = product.find(
                             "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"}).get_text()
-                        if price >= 30000 and ('3060' in name and price <= 70000 or '3070' in name and price <= 100000 or '3080' in name and price <= 160000 or '3090' in name and price <= 190000):
+                        if price >= 30000 and ('3060' in name and price <= 60000 or '3070' in name and price <= 85000 or '3080' in name and price <= 130000 or '3090' in name and price <= 170000):
                             href = product.find(
                                 "a", {"class": "js-b-plate-product__caption-text js-b-list-product__caption-text"})['href']
                             bot.send_message(
