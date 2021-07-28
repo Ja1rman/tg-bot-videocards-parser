@@ -119,7 +119,7 @@ def oldi():
                     price = float(product['price'])
                     name = product['name']
                     kat = product['categories'][0]['name']
-                    if kat == 'Видеокарты' and price >= 30000 and ('2060' in name and price <= 50000 or '3060' in name and price <= 70000 or '3070' in name and price <= 100000 or '3080' in name and price <= 160000 or '3090' in name and price <= 190000):
+                    if kat == 'Видеокарты' and price >= 30000 and ('2060' in name and price <= 50000 or '3060' in name and price <= 50000 or '3070' in name and price <= 100000 or '3080' in name and price <= 160000 or '3090' in name and price <= 190000):
                         bot.send_message(CHANNEL, 'https://www.oldi.ru/catalog/element/' + product['id'], disable_web_page_preview=True)
                         discord_webhook.DiscordWebhook(url=wb2,
                                                 content='https://www.oldi.ru/catalog/element/' + product['id']).execute()
